@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -261,10 +262,6 @@ button {
 .number-group,
 .answer-group {
 
-    /*
-     * 数字とポケモンを
-     * 同じまとまりとして認識できるようにする
-     */
     flex: 0 1 auto;
 
     min-width: 0;
@@ -352,21 +349,16 @@ button {
 }
 
 .answer-number.correct {
-
     color: #55a96c;
-
 }
 
 
 /* =========================================================
-   ポケモン
+   ポケモン・りんご共通グリッド
 ========================================================= */
 
 .pokemon-grid {
 
-    /*
-     * 3×3グリッド全体を大型化
-     */
     width: clamp(185px, 19vw, 260px);
     height: clamp(185px, 19vw, 260px);
 
@@ -383,11 +375,13 @@ button {
     margin-top: clamp(2px, 0.3vh, 5px);
 }
 
+
+/* =========================================================
+   ポケモン
+========================================================= */
+
 .pokemon-item {
 
-    /*
-     * 1匹ずつも大型化
-     */
     width: clamp(58px, 6.2vw, 82px);
     height: clamp(58px, 6.2vw, 82px);
 
@@ -422,6 +416,104 @@ button {
     align-items: center;
 
     font-size: clamp(26px, 3vw, 42px);
+}
+
+
+/* =========================================================
+   りんご
+========================================================= */
+
+.apple-item {
+
+    width: clamp(58px, 6.2vw, 82px);
+    height: clamp(58px, 6.2vw, 82px);
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+}
+
+
+/*
+ * CSSだけで作る、幼児向けの
+ * シンプルなりんごイラスト
+ */
+
+.apple {
+
+    position: relative;
+
+    width: 72%;
+    height: 72%;
+
+    margin-top: 8%;
+
+    background: #f45f5f;
+
+    border-radius:
+        48% 48% 45% 45% /
+        50% 50% 48% 48%;
+
+    box-shadow:
+        inset -5px -6px 0 rgba(190, 55, 55, 0.18),
+        2px 3px 0 rgba(130, 80, 50, 0.08);
+
+    transform: rotate(-3deg);
+}
+
+
+/*
+ * りんごのくぼみ
+ */
+
+.apple::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 38%;
+    height: 28%;
+
+    top: -7%;
+    left: 31%;
+
+    background: #f45f5f;
+
+    border-radius: 50%;
+
+    box-shadow:
+        16px 1px 0 #f45f5f;
+}
+
+
+/*
+ * りんごの葉っぱ
+ */
+
+.apple::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 38%;
+    height: 24%;
+
+    top: -20%;
+    left: 52%;
+
+    background: #72bd69;
+
+    border-radius:
+        100% 0 100% 0;
+
+    transform:
+        rotate(-20deg);
+
+    box-shadow:
+        inset -2px -2px 0 rgba(60, 140, 65, 0.15);
 }
 
 
@@ -508,9 +600,6 @@ button {
 
     width: 100%;
 
-    /*
-     * ボタン自体のサイズ・配置は従来のまま
-     */
     aspect-ratio: 1 / 0.78;
 
     min-width: 0;
@@ -526,8 +615,8 @@ button {
         inset 0 0 0 3px #fff;
 
     /*
-     * ボタンサイズは変えず、
-     * 数字だけ大きく
+     * ボタン自体のサイズは変更せず、
+     * 数字だけ大きくする
      */
     font-size: clamp(32px, 3.8vw, 50px);
     font-weight: 900;
@@ -558,7 +647,6 @@ button {
 
 /* =========================================================
    次の問題エリア
-   ※最初から高さを確保
 ========================================================= */
 
 .next-area {
@@ -618,10 +706,6 @@ button {
     display: none !important;
 }
 
-
-/*
- * next-areaだけは例外
- */
 .next-area.hidden {
     display: flex !important;
     visibility: hidden;
@@ -664,8 +748,6 @@ button {
         border-radius: 14px;
     }
 
-
-    /* カードを少しコンパクトに */
 
     .number-group,
     .answer-group {
@@ -712,7 +794,8 @@ button {
         margin-top: 2px;
     }
 
-    .pokemon-item {
+    .pokemon-item,
+    .apple-item {
 
         width: 46px;
         height: 46px;
@@ -790,7 +873,8 @@ button {
         height: 112px;
     }
 
-    .pokemon-item {
+    .pokemon-item,
+    .apple-item {
 
         width: 34px;
         height: 34px;
@@ -858,10 +942,6 @@ button {
     }
 
 
-    /* -----------------------------------------
-       スマートフォン用カード
-    ----------------------------------------- */
-
     .equation {
 
         gap: 3px;
@@ -872,10 +952,6 @@ button {
     .number-group,
     .answer-group {
 
-        /*
-         * 横幅の限られたスマホでも
-         * 3枚のカードを横一列に維持
-         */
         width: clamp(92px, 28vw, 145px);
 
         padding: 4px 2px 5px;
@@ -911,7 +987,7 @@ button {
 
 
     /* -----------------------------------------
-       ポケモン
+       ポケモン・りんご
     ----------------------------------------- */
 
     .pokemon-grid {
@@ -923,7 +999,8 @@ button {
         gap: 0;
     }
 
-    .pokemon-item {
+    .pokemon-item,
+    .apple-item {
 
         width: clamp(29px, 8vw, 43px);
 
@@ -939,8 +1016,6 @@ button {
 
     /* -----------------------------------------
        回答ボタン
-       サイズは従来のまま
-       数字だけ大型化
     ----------------------------------------- */
 
     .answer-buttons {
@@ -1025,7 +1100,8 @@ button {
         height: 22vw;
     }
 
-    .pokemon-item {
+    .pokemon-item,
+    .apple-item {
 
         width: 6.8vw;
 
@@ -1092,7 +1168,8 @@ button {
         height: 20vw;
     }
 
-    .pokemon-item {
+    .pokemon-item,
+    .apple-item {
 
         width: 6.2vw;
 
@@ -1193,7 +1270,7 @@ button {
 
 
                 <!-- =========================================
-                     左：数字＋ポケモン
+                     左：数字＋ポケモン／りんご
                 ========================================== -->
 
                 <div class="number-group">
@@ -1249,7 +1326,7 @@ button {
 
 
                 <!-- =========================================
-                     答え：数字＋ポケモン
+                     答え：数字＋ポケモン／りんご
                 ========================================== -->
 
                 <div class="answer-group">
@@ -1351,7 +1428,6 @@ button {
 
         <!-- =================================================
              次の問題
-             ※最初からスペースを確保
         ================================================== -->
 
         <div
@@ -1579,11 +1655,6 @@ function generateQuestion() {
 
     message.className = "message";
 
-    /*
-     * 次の問題ボタンは非表示にするが、
-     * nextArea自体は常に存在するため
-     * 画面レイアウトは動かない。
-     */
     nextArea.classList.add("hidden");
 
     answerNumber.textContent = "？";
@@ -1690,19 +1761,57 @@ function generateQuestion() {
             : "－";
 
 
-    /* ポケモン */
+    /*
+     * -----------------------------------------
+     * たしざん
+     *
+     * 左・右・答え
+     * すべて同じポケモン
+     *
+     * -----------------------------------------
+     *
+     * ひきざん
+     *
+     * 左   → りんご
+     * 右   → ポケモン
+     * 答え → りんご
+     * -----------------------------------------
+     */
 
-    renderPokemonGroup(
-        leftPokemonGrid,
-        state.left,
-        state.pokemonId
-    );
+    if (state.mode === "subtraction") {
 
-    renderPokemonGroup(
-        rightPokemonGrid,
-        state.right,
-        state.pokemonId
-    );
+        renderAppleGroup(
+            leftPokemonGrid,
+            state.left
+        );
+
+        renderPokemonGroup(
+            rightPokemonGrid,
+            state.right,
+            state.pokemonId
+        );
+
+        /*
+         * 答えのポケモンは
+         * 正解するまで表示しない。
+         * 正解後にりんごを表示する。
+         */
+
+    } else {
+
+        renderPokemonGroup(
+            leftPokemonGrid,
+            state.left,
+            state.pokemonId
+        );
+
+        renderPokemonGroup(
+            rightPokemonGrid,
+            state.right,
+            state.pokemonId
+        );
+
+    }
 
 }
 
@@ -1756,16 +1865,40 @@ function handleCorrect() {
 
     disableAnswerButtons();
 
-    renderPokemonGroup(
-        answerPokemonGrid,
-        state.answer,
-        state.pokemonId
-    );
 
     /*
-     * nextAreaはもともと同じ高さを確保しているので、
+     * ひきざんの場合
+     * 答えはりんご
+     */
+
+    if (state.mode === "subtraction") {
+
+        renderAppleGroup(
+            answerPokemonGrid,
+            state.answer
+        );
+
+    } else {
+
+        /*
+         * たしざんの場合
+         * 答えはポケモン
+         */
+
+        renderPokemonGroup(
+            answerPokemonGrid,
+            state.answer,
+            state.pokemonId
+        );
+
+    }
+
+
+    /*
+     * nextAreaはもともと同じ高さを確保しているため、
      * ここで表示しても他の要素が動かない。
      */
+
     nextArea.classList.remove(
         "hidden"
     );
@@ -1830,7 +1963,7 @@ function enableAnswerButtons() {
 
 
 /* =========================================================
-   ポケモン
+   ポケモン表示
 ========================================================= */
 
 function renderPokemonGroup(
@@ -1898,6 +2031,51 @@ function renderPokemonGroup(
 
 }
 
+
+/* =========================================================
+   りんご表示
+========================================================= */
+
+function renderAppleGroup(
+    container,
+    count
+) {
+
+    clearPokemonGrid(container);
+
+
+    for (
+        let i = 0;
+        i < count;
+        i++
+    ) {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "apple-item";
+
+
+        const apple =
+            document.createElement("div");
+
+        apple.className =
+            "apple";
+
+
+        item.appendChild(apple);
+
+        container.appendChild(item);
+
+    }
+
+}
+
+
+/* =========================================================
+   グリッドをクリア
+========================================================= */
 
 function clearPokemonGrid(container) {
 
@@ -2121,3 +2299,4 @@ gameScreen.classList.add(
 
 </body>
 </html>
+```
