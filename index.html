@@ -644,6 +644,13 @@ button {
     cursor: default;
 }
 
+.answer-button.wrong {
+
+    opacity: 0.3;
+
+    cursor: default;
+}
+
 
 /* =========================================================
    次の問題エリア
@@ -1533,6 +1540,10 @@ const answerButtons =
 const nextArea =
     document.getElementById("nextArea");
 
+const correctSound = new Audio("sounds/correct.mp3");
+
+const incorrectSound = new Audio("sounds/wrong.mp3");
+
 
 /* =========================================================
    イベント
@@ -1572,7 +1583,7 @@ answerButtons.forEach(button => {
             const selectedAnswer =
                 Number(button.dataset.answer);
 
-            checkAnswer(selectedAnswer);
+            checkAnswer(selectedAnswer, button);
 
         }
     );
@@ -1820,9 +1831,13 @@ function generateQuestion() {
    回答
 ========================================================= */
 
-function checkAnswer(selectedAnswer) {
+function checkAnswer(selectedAnswer, button) {
 
     if (state.solved) {
+        return;
+    }
+
+    if (button && button.disabled) {
         return;
     }
 
@@ -1835,7 +1850,7 @@ function checkAnswer(selectedAnswer) {
 
     } else {
 
-        handleIncorrect();
+        handleIncorrect(button);
 
     }
 
@@ -1912,13 +1927,23 @@ function handleCorrect() {
    不正解
 ========================================================= */
 
-function handleIncorrect() {
+function handleIncorrect(button) {
 
     message.textContent =
         "おしい！";
 
     message.className =
         "message";
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.classList.add(
+            "wrong"
+        );
+
+    }
 
     playIncorrectSound();
 
@@ -1956,6 +1981,7 @@ function enableAnswerButtons() {
     answerButtons.forEach(
         button => {
             button.disabled = false;
+            button.classList.remove("wrong");
         }
     );
 
@@ -2235,50 +2261,40 @@ function playTone(
 
 function playCorrectSound() {
 
-    playTone(
-        523.25,
-        0.12,
-        "sine"
-    );
+    try {
 
+        correctSound.currentTime = 0;
 
-    setTimeout(
-        () => {
+        correctSound.play().catch(() => {});
 
-            playTone(
-                659.25,
-                0.12,
-                "sine"
-            );
+    } catch (error) {
 
-        },
-        100
-    );
+        /*
+         * 音声の失敗は
+         * ゲームに影響させない
+         */
 
-
-    setTimeout(
-        () => {
-
-            playTone(
-                783.99,
-                0.18,
-                "sine"
-            );
-
-        },
-        200
-    );
+    }
 
 }
 
 
 function playIncorrectSound() {
 
-    playTone(
-        220,
-        0.16,
-        "triangle"
-    );
+    try {
+
+        incorrectSound.currentTime = 0;
+
+        incorrectSound.play().catch(() => {});
+
+    } catch (error) {
+
+        /*
+         * 音声の失敗は
+         * ゲームに影響させない
+         */
+
+    }
 
 }
 
