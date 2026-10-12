@@ -13,7 +13,6 @@
 
 <style>
 
-   
 /* =========================================================
    基本設定
 ========================================================= */
@@ -181,6 +180,14 @@ button {
     color: #ff8b5c;
 }
 
+.title-group {
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+}
+
 .header-buttons {
     display: flex;
     gap: 8px;
@@ -210,6 +217,12 @@ button {
 
 .home-button {
     background: #8ecf88;
+}
+
+.toggle-button {
+
+    background: #b79af0;
+
 }
 
 .header-button:active {
@@ -376,6 +389,12 @@ button {
     margin-top: clamp(2px, 0.3vh, 5px);
 }
 
+
+.pokemon-grid.pokemon-hidden {
+
+    visibility: hidden;
+
+}
 
 /* =========================================================
    ポケモン
@@ -1243,11 +1262,21 @@ button {
 
         <header class="game-header">
 
-            <h2
-                id="modeTitle"
-                class="mode-title">
-                たしざん
-            </h2>
+            <div class="title-group">
+
+                <h2
+                    id="modeTitle"
+                    class="mode-title">
+                    たしざん
+                </h2>
+
+                <button
+                    id="togglePokemonButton"
+                    class="header-button toggle-button">
+                    ひひょうじ
+                </button>
+
+            </div>
 
             <div class="header-buttons">
 
@@ -1476,6 +1505,8 @@ const state = {
 
     solved: false,
 
+    showPokemon: true,
+
     previousQuestionKey: null,
 
     questionId: 0
@@ -1498,6 +1529,9 @@ const additionButton =
 
 const subtractionButton =
     document.getElementById("subtractionButton");
+
+const togglePokemonButton =
+    document.getElementById("togglePokemonButton");
 
 const homeButton =
     document.getElementById("homeButton");
@@ -1558,6 +1592,11 @@ additionButton.addEventListener(
 subtractionButton.addEventListener(
     "click",
     () => startGame("subtraction")
+);
+
+togglePokemonButton.addEventListener(
+    "click",
+    togglePokemonVisibility
 );
 
 homeButton.addEventListener(
@@ -1985,6 +2024,37 @@ function enableAnswerButtons() {
             button.classList.remove("wrong");
         }
     );
+
+}
+
+function togglePokemonVisibility() {
+
+    state.showPokemon = !state.showPokemon;
+
+    applyPokemonVisibility();
+
+}
+
+
+function applyPokemonVisibility() {
+
+    if (state.showPokemon) {
+
+        leftPokemonGrid.classList.remove("pokemon-hidden");
+
+        rightPokemonGrid.classList.remove("pokemon-hidden");
+
+        togglePokemonButton.textContent = "ひひょうじ";
+
+    } else {
+
+        leftPokemonGrid.classList.add("pokemon-hidden");
+
+        rightPokemonGrid.classList.add("pokemon-hidden");
+
+        togglePokemonButton.textContent = "ひょうじ";
+
+    }
 
 }
 
