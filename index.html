@@ -225,6 +225,16 @@ button {
 
 }
 
+.mode-switch-button {
+
+    background: #5fb8e8;
+
+}
+
+.number.correct {
+    color: #55a96c;
+}
+
 .header-button:active {
     transform: translateY(3px);
 
@@ -1276,6 +1286,12 @@ button {
                     ひひょうじ
                 </button>
 
+                <button
+                    id="modeSwitchButton"
+                    class="header-button mode-switch-button hidden">
+                    もーどきりかえ
+                </button>
+
             </div>
 
             <div class="header-buttons">
@@ -1495,11 +1511,21 @@ const state = {
 
     mode: null,
 
+    /*
+     * たしざんの問題形式
+     * "findAnswer" : 数値＋数値＝？
+     * "findRight"  : 数値＋？＝数値
+     */
+    additionType: "findAnswer",
+
     left: 1,
 
     right: 1,
 
     answer: 1,
+
+    /* ボタンで選ぶ正解の数字 */
+    target: 1,
 
     pokemonId: 25,
 
@@ -1532,6 +1558,9 @@ const subtractionButton =
 
 const togglePokemonButton =
     document.getElementById("togglePokemonButton");
+
+const modeSwitchButton =
+    document.getElementById("modeSwitchButton");
 
 const homeButton =
     document.getElementById("homeButton");
@@ -1599,6 +1628,11 @@ togglePokemonButton.addEventListener(
     togglePokemonVisibility
 );
 
+modeSwitchButton.addEventListener(
+    "click",
+    switchAdditionType
+);
+
 homeButton.addEventListener(
     "click",
     showHome
@@ -1639,9 +1673,17 @@ function startGame(mode) {
 
     state.mode = mode;
 
+    state.additionType = "findAnswer";
+
     state.previousQuestionKey = null;
 
     state.questionId++;
+
+    /* もーどきりかえボタンは、たしざんのときだけ表示 */
+    modeSwitchButton.classList.toggle(
+        "hidden",
+        mode !== "addition"
+    );
 
     homeScreen.classList.add("hidden");
 
@@ -1668,6 +1710,8 @@ function showHome() {
     state.mode = null;
 
     state.solved = false;
+
+    modeSwitchButton.classList.add("hidden");
 
     gameScreen.classList.add("hidden");
 
@@ -1711,6 +1755,8 @@ function generateQuestion() {
     answerNumber.textContent = "？";
 
     answerNumber.classList.remove("correct");
+
+    rightNumber.classList.remove("correct");
 
     clearPokemonGrid(answerPokemonGrid);
 
@@ -1774,7 +1820,7 @@ function generateQuestion() {
 
 
         questionKey =
-            `${state.mode}-${left}-${right}`;
+            `${state.mode}-${state.additionType}-${left}-${right}`;
 
     } while (
         questionKey ===
@@ -1787,6 +1833,19 @@ function generateQuestion() {
     state.right = right;
 
     state.answer = answer;
+
+    /*
+     * ボタンで選ぶ正解
+     * 「数値＋？＝数値」のときは右の数字
+     */
+
+    state.target =
+        (
+            state.mode === "addition" &&
+            state.additionType === "findRight"
+        )
+            ? right
+            : answer;
 
     state.pokemonId =
         randomPokemonId();
@@ -1802,6 +1861,23 @@ function generateQuestion() {
 
     rightNumber.textContent =
         state.right;
+
+    if (
+        state.mode === "addition" &&
+        state.additionType === "findRight"
+    ) {
+
+        /*
+         * 数値＋？＝数値
+         * 右は「？」、答え欄にたし算の合計を表示
+         */
+
+        rightNumber.textContent = "？";
+
+        answerNumber.textContent =
+            state.answer;
+
+    }
 
 
     /* 演算子 */
@@ -1848,6 +1924,29 @@ function generateQuestion() {
          * 正解後にりんごを表示する。
          */
 
+    } else if (state.additionType === "findRight") {
+
+        /*
+         * 数値＋？＝数値
+         *
+         * 左・答え（合計）のポケモンを表示。
+         * 右のポケモンは正解するまで表示しない。
+         */
+
+        renderPokemonGroup(
+            leftPokemonGrid,
+            state.left,
+            state.pokemonId
+        );
+
+        clearPokemonGrid(rightPokemonGrid);
+
+        renderPokemonGroup(
+            answerPokemonGrid,
+            state.answer,
+            state.pokemonId
+        );
+
     } else {
 
         renderPokemonGroup(
@@ -1863,6 +1962,8 @@ function generateQuestion() {
         );
 
     }
+
+    applyPokemonVisibility();
 
 }
 
@@ -1883,7 +1984,7 @@ function checkAnswer(selectedAnswer, button) {
 
     if (
         selectedAnswer ===
-        state.answer
+        state.target
     ) {
 
         handleCorrect();
@@ -1905,12 +2006,30 @@ function handleCorrect() {
 
     state.solved = true;
 
-    answerNumber.textContent =
-        state.answer;
+    if (
+        state.mode === "addition" &&
+        state.additionType === "findRight"
+    ) {
 
-    answerNumber.classList.add(
-        "correct"
-    );
+        /* 「？」だった右の数字を表示する */
+
+        rightNumber.textContent =
+            state.right;
+
+        rightNumber.classList.add(
+            "correct"
+        );
+
+    } else {
+
+        answerNumber.textContent =
+            state.answer;
+
+        answerNumber.classList.add(
+            "correct"
+        );
+
+    }
 
     message.textContent =
         "せいかい！";
@@ -1932,6 +2051,21 @@ function handleCorrect() {
             answerPokemonGrid,
             state.answer
         );
+
+    } else if (state.additionType === "findRight") {
+
+        /*
+         * たしざん（数値＋？＝数値）の場合
+         * 右のポケモンを表示する
+         */
+
+        renderPokemonGroup(
+            rightPokemonGrid,
+            state.right,
+            state.pokemonId
+        );
+
+        applyPokemonVisibility();
 
     } else {
 
@@ -2038,6 +2172,22 @@ function togglePokemonVisibility() {
 
 function applyPokemonVisibility() {
 
+    /*
+     * 数値＋？＝数値 のときは、
+     * 答え欄（合計）のポケモンも
+     * ひひょうじの対象にする
+     */
+
+    const hideAnswerGrid =
+        state.mode === "addition" &&
+        state.additionType === "findRight" &&
+        !state.showPokemon;
+
+    answerPokemonGrid.classList.toggle(
+        "pokemon-hidden",
+        hideAnswerGrid
+    );
+
     if (state.showPokemon) {
 
         leftPokemonGrid.classList.remove("pokemon-hidden");
@@ -2055,6 +2205,28 @@ function applyPokemonVisibility() {
         togglePokemonButton.textContent = "ひょうじ";
 
     }
+
+}
+
+
+/* =========================================================
+   たしざんの問題形式切り替え
+========================================================= */
+
+function switchAdditionType() {
+
+    if (state.mode !== "addition") {
+        return;
+    }
+
+    state.additionType =
+        state.additionType === "findAnswer"
+            ? "findRight"
+            : "findAnswer";
+
+    state.previousQuestionKey = null;
+
+    generateQuestion();
 
 }
 
